@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Mahindra University</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #1c1c1c;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background-color: #222;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    input::placeholder {
+      color: #aaa;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 25px;
+      background-color: #6ea8fe;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: #528dde;
+    }
+
+    .error {
+      color: #ff6b6b;
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .registrations-list {
+      margin-top: 2rem;
+    }
+
+    .registration-item {
+      background-color: #222;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .registration-item button {
+      width: auto;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+    }
+
+    .nav-links {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .nav-links a {
+      color: #6ea8fe;
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registration Dashboard</h2>
+    
+    <div class="nav-links">
+      <a href="courseopenelective.html">Course Electives</a>
+      <a href="projects.html">Project Preferences</a>
+      <a href="dashboard.html">Main Dashboard</a>
+    </div>
+
+    <div class="error" id="error-message"></div>
+
+    <div class="registrations-list" id="registrations-list">
+      <h3>Your Registrations</h3>
+    </div>
+  </div>
+
+  <script>
+    async function fetchRegistrations() {
+      try {
+        const response = await fetch("http://localhost:3000/all/registrations");
+        const data = await response.json();
+
+        if (response.ok) {
+          displayRegistrations(data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function displayRegistrations(registrations) {
+      const list = document.getElementById("registrations-list");
+      list.innerHTML = "<h3>Your Registrations</h3>";
+
+      registrations.forEach(reg => {
+        const div = document.createElement("div");
+        div.className = "registration-item";
+        div.innerHTML = `
+          <p>Name: ${reg.name}</p>
+          <p>Email: ${reg.email}</p>
+          <p>Type: ${reg.courseOrProject}</p>
+          <p>Selection: ${reg.selectionName}</p>
+          <button onclick="editRegistration('${reg._id}', '${reg.name}', '${reg.email}', '${reg.courseOrProject}', '${reg.selectionName}')">Edit</button>
+          <button onclick="deleteRegistration('${reg._id}')">Delete</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function editRegistration(id, name, email, courseOrProject, selectionName) {
+      if (courseOrProject === "course") {
+        window.location.href = `courseopenelective.html?edit=${id}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&selectionName=${encodeURIComponent(selectionName)}`;
+      } else {
+        window.location.href = `projects.html?edit=${id}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&selectionName=${encodeURIComponent(selectionName)}`;
+      }
+    }
+
+    async function deleteRegistration(id) {
+      if (confirm("Are you sure you want to delete this registration?")) {
+        try {
+          const response = await fetch(`http://localhost:3000/all/registrations/${id}`, {
+            method: "DELETE"
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("Registration deleted successfully!");
+            fetchRegistrations();
+          } else {
+            document.getElementById("error-message").textContent = data.message || "Deletion failed";
+            document.getElementById("error-message").style.display = "block";
+          }
+        } catch (error) {
+          document.getElementById("error-message").textContent = "Server error";
+          document.getElementById("error-message").style.display = "block";
+        }
+      }
+    }
+
+    window.onload = fetchRegistrations;
+  </script>
+</body>
+</html>

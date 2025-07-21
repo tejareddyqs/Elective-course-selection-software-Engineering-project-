@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selection Confirmation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #f5f5f5;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #004080;
+      color: white;
+      padding: 1rem 2rem;
+    }
+
+    .top-nav .dropdown {
+      position: relative;
+    }
+
+    .dropdown-toggle {
+      background-color: #004080;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .dropdown-toggle::after {
+      content: " ▼";
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #0056a3;
+      min-width: 220px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #004080;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .logout {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #004080;
+      color: white;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .sidebar .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+
+    .nav {
+      margin-top: 1rem;
+    }
+
+    .nav a {
+      display: block;
+      color: white;
+      padding: 0.7rem;
+      text-decoration: none;
+      border-bottom: 1px solid #0055aa;
+    }
+
+    .nav a:hover {
+      background-color: #003366;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 2rem;
+    }
+
+    .confirmation-table {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+    }
+
+    .confirmation-table h4 {
+      margin-bottom: 1rem;
+    }
+
+    .confirmation-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .confirmation-table th, .confirmation-table td {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .confirmation-table th {
+      background-color: #f0f0f0;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #004080;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .back-btn:hover {
+      background-color: #003366;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <div class="dropdown">
+      <button class="dropdown-toggle">Academic Functions</button>
+      <div class="dropdown-content">
+        <a href="student.html">Course Registration</a>
+        <a href="#">University Exam/Result</a>
+        <a href="#">Course Feedback</a>
+        <a href="#">Online Assessment</a>
+        <a href="#">Online Assessment Result</a>
+        <a href="#">Mentor Feedback</a>
+        <a href="courseopenelective.html">Course Open Elective Preferences</a>
+        <a href="#">Student Withdrawal Request</a>
+        <a href="projects.html">Projects</a>
+      </div>
+    </div>
+    <button class="logout" onclick="logout()">Log Out</button>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="sidebar">
+      <img src="https://via.placeholder.com/100" alt="Profile" class="profile-pic">
+      <div class="nav">
+        <a href="student.html">DASHBOARD</a>
+        <a href="#">PROFILE</a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="confirmation-table">
+        <h4>Selection Confirmation</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Sr No</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody id="selection-list"></tbody>
+        </table>
+        <a href="student.html" class="back-btn">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadSelections() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const courseCodes = urlParams.get('courses')?.split(',') || [];
+      const projectCodes = urlParams.get('projects')?.split(',') || [];
+      const courseNames = JSON.parse(decodeURIComponent(urlParams.get('names') || '[]'));
+      const projectNames = JSON.parse(decodeURIComponent(urlParams.get('names') || '[]'));
+      const selectionList = document.getElementById("selection-list");
+
+      let selections = [];
+      courseCodes.forEach((code, index) => {
+        if (courseNames[index]) {
+          selections.push({ code, name: courseNames[index], type: 'Course' });
+        }
+      });
+      projectCodes.forEach((code, index) => {
+        if (projectNames[index]) {
+          selections.push({ code, name: projectNames[index], type: 'Project' });
+        }
+      });
+
+      selectionList.innerHTML = selections.map((sel, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${sel.code}</td>
+          <td>${sel.name}</td>
+          <td>${sel.type}</td>
+        </tr>
+      `).join("");
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    window.onload = loadSelections;
+  </script>
+</body>
+</html>

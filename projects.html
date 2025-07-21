@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Preferences</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #f5f5f5;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #004080;
+      color: white;
+      padding: 1rem 2rem;
+    }
+
+    .top-nav .dropdown {
+      position: relative;
+    }
+
+    .dropdown-toggle {
+      background-color: #004080;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .dropdown-toggle::after {
+      content: " ▼";
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #0056a3;
+      min-width: 220px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #004080;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .logout {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #004080;
+      color: white;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .sidebar .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+
+    .nav {
+      margin-top: 1rem;
+    }
+
+    .nav a {
+      display: block;
+      color: white;
+      padding: 0.7rem;
+      text-decoration: none;
+      border-bottom: 1px solid #0055aa;
+    }
+
+    .nav a:hover {
+      background-color: #003366;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 2rem;
+    }
+
+    .project-table {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+    }
+
+    .project-table h4 {
+      margin-bottom: 1rem;
+    }
+
+    .project-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .project-table th, .project-table td {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .project-table th {
+      background-color: #f0f0f0;
+    }
+
+    .submit-btn {
+      display: block;
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #003366;
+    }
+
+    .error {
+      color: #ff6b6b;
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .registrations-list {
+      margin-top: 2rem;
+    }
+
+    .registration-item {
+      background-color: #f0f0f0;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .registration-item button {
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <div class="dropdown">
+      <button class="dropdown-toggle">Academic Functions</button>
+      <div class="dropdown-content">
+        <a href="student.html">Course Registration</a>
+        <a href="#">University Exam/Result</a>
+        <a href="#">Course Feedback</a>
+        <a href="#">Online Assessment</a>
+        <a href="#">Online Assessment Result</a>
+        <a href="#">Mentor Feedback</a>
+        <a href="courseopenelective.html">Course Open Elective Preferences</a>
+        <a href="#">Student Withdrawal Request</a>
+        <a href="projects.html">Projects</a>
+      </div>
+    </div>
+    <button class="logout" onclick="logout()">Log Out</button>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="sidebar">
+      <img src="https://via.placeholder.com/100" alt="Profile" class="profile-pic">
+      <div class="nav">
+        <a href="dashboard.html">DASHBOARD</a>
+        <a href="#">PROFILE</a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="error" id="error-message"></div>
+      <div class="project-table">
+        <h4>Project Preferences</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Sr No</th>
+              <th>Project Code</th>
+              <th>Project Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" name="project" value="PRJ101" data-name="Chat Application with Real-Time Messaging"></td>
+              <td>1</td>
+              <td>PRJ101</td>
+              <td>Chat Application with Real-Time Messaging</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="project" value="PRJ102" data-name="Weather Forecasting Web App"></td>
+              <td>2</td>
+              <td>PRJ102</td>
+              <td>Weather Forecasting Web App</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="project" value="PRJ103" data-name="Expense Tracker Mobile App"></td>
+              <td>3</td>
+              <td>PRJ103</td>
+              <td>Expense Tracker Mobile App</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="project" value="PRJ104" data-name="Online Voting System"></td>
+              <td>4</td>
+              <td>PRJ104</td>
+              <td>Online Voting System</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="project" value="PRJ105" data-name="AI-Powered Chatbot for FAQs"></td>
+              <td>5</td>
+              <td>PRJ105</td>
+              <td>AI-Powered Chatbot for FAQs</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="project" value="PRJ106" data-name="E-Commerce Product Recommendation System"></td>
+              <td>6</td>
+              <td>PRJ106</td>
+              <td>E-Commerce Product Recommendation System</td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="submit-btn" onclick="submitProjects()">Submit Preferences</button>
+      </div>
+      <div class="registrations-list" id="registrations-list">
+        <h4>Your Project Registrations</h4>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function submitProjects() {
+      const checkboxes = document.querySelectorAll('input[name="project"]:checked');
+      const selectedProjects = Array.from(checkboxes).map(checkbox => ({
+        code: checkbox.value,
+        name: checkbox.getAttribute('data-name')
+      }));
+      const errorMessage = document.getElementById("error-message");
+
+      errorMessage.style.display = "none";
+      errorMessage.textContent = "";
+
+      if (selectedProjects.length > 5) {
+        errorMessage.textContent = 'You can only select up to 5 projects.';
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      if (selectedProjects.length === 0) {
+        errorMessage.textContent = 'Please select at least one project.';
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      try {
+        const userEmail = localStorage.getItem("userEmail");
+        const userName = localStorage.getItem("userName") || "Student";
+        for (const project of selectedProjects) {
+          const response = await fetch("http://localhost:3000/all/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: userName,
+              email: userEmail,
+              courseOrProject: "project",
+              selectionName: project.name
+            })
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            errorMessage.textContent = data.message || "Registration failed";
+            errorMessage.style.display = "block";
+            return;
+          }
+        }
+
+        alert("Project preferences submitted successfully!");
+        fetchRegistrations();
+        checkboxes.forEach(checkbox => checkbox.checked = false);
+        const projectCodes = selectedProjects.map(p => p.code).join(",");
+        const projectNames = encodeURIComponent(JSON.stringify(selectedProjects.map(p => p.name)));
+        window.location.href = `confirmation.html?projects=${projectCodes}&names=${projectNames}`;
+      } catch (error) {
+        errorMessage.textContent = "Failed to submit preferences";
+        errorMessage.style.display = "block";
+      }
+    }
+
+    async function fetchRegistrations() {
+      try {
+        const response = await fetch("http://localhost:3000/all/registrations");
+        const data = await response.json();
+
+        if (response.ok) {
+          displayRegistrations(data.data.filter(reg => reg.courseOrProject === "project"));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function displayRegistrations(registrations) {
+      const list = document.getElementById("registrations-list");
+      list.innerHTML = "<h4>Your Project Registrations</h4>";
+
+      registrations.forEach(reg => {
+        const div = document.createElement("div");
+        div.className = "registration-item";
+        div.innerHTML = `
+          <p>Name: ${reg.name}</p>
+          <p>Email: ${reg.email}</p>
+          <p>Project: ${reg.selectionName}</p>
+          <button onclick="editRegistration('${reg._id}', '${reg.name}', '${reg.email}', '${reg.selectionName}')">Edit</button>
+          <button onclick="deleteRegistration('${reg._id}')">Delete</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function editRegistration(id, name, email, selectionName) {
+      const projectCheckboxes = document.querySelectorAll('input[name="project"]');
+      projectCheckboxes.forEach(checkbox => {
+        if (checkbox.getAttribute('data-name') === selectionName) {
+          checkbox.checked = true;
+        }
+      });
+
+      const submitButton = document.querySelector(".submit-btn");
+      submitButton.textContent = "Update Preference";
+      submitButton.onclick = async () => {
+        const checkboxes = document.querySelectorAll('input[name="project"]:checked');
+        const selectedProject = checkboxes[0] ? {
+          name: checkboxes[0].getAttribute('data-name')
+        } : null;
+
+        if (!selectedProject) {
+          document.getElementById("error-message").textContent = "Please select a project";
+          document.getElementById("error-message").style.display = "block";
+          return;
+        }
+
+        try {
+          const response = await fetch(`http://localhost:3000/all/registrations/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              email,
+              courseOrProject: "project",
+              selectionName: selectedProject.name
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("Registration updated successfully!");
+            fetchRegistrations();
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            resetButton();
+          } else {
+            document.getElementById("error-message").textContent = data.message || "Update failed";
+            document.getElementById("error-message").style.display = "block";
+          }
+        } catch (error) {
+          document.getElementById("error-message").textContent = "Server error";
+          document.getElementById("error-message").style.display = "block";
+        }
+      };
+    }
+
+    async function deleteRegistration(id) {
+      if (confirm("Are you sure you want to delete this registration?")) {
+        try {
+          const response = await fetch(`http://localhost:3000/all/registrations/${id}`, {
+            method: "DELETE"
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("Registration deleted successfully!");
+            fetchRegistrations();
+          } else {
+            document.getElementById("error-message").textContent = data.message || "Deletion failed";
+            document.getElementById("error-message").style.display = "block";
+          }
+        } catch (error) {
+          document.getElementById("error-message").textContent = "Server error";
+          document.getElementById("error-message").style.display = "block";
+        }
+      }
+    }
+
+    function resetButton() {
+      const submitButton = document.querySelector(".submit-btn");
+      submitButton.textContent = "Submit Preferences";
+      submitButton.onclick = submitProjects;
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const editId = urlParams.get('edit');
+      if (editId) {
+        const name = decodeURIComponent(urlParams.get('name'));
+        const email = decodeURIComponent(urlParams.get('email'));
+        const selectionName = decodeURIComponent(urlParams.get('selectionName'));
+        editRegistration(editId, name, email, selectionName);
+      }
+      fetchRegistrations();
+    };
+  </script>
+</body>
+</html>

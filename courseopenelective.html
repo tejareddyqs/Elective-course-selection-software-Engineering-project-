@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Open Elective Preferences</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #f5f5f5;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #004080;
+      color: white;
+      padding: 1rem 2rem;
+    }
+
+    .top-nav .dropdown {
+      position: relative;
+    }
+
+    .dropdown-toggle {
+      background-color: #004080;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .dropdown-toggle::after {
+      content: " ▼";
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #0056a3;
+      min-width: 220px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #004080;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .logout {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #004080;
+      color: white;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .sidebar .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+
+    .nav {
+      margin-top: 1rem;
+    }
+
+    .nav a {
+      display: block;
+      color: white;
+      padding: 0.7rem;
+      text-decoration: none;
+      border-bottom: 1px solid #0055aa;
+    }
+
+    .nav a:hover {
+      background-color: #003366;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 2rem;
+    }
+
+    .elective-table {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+    }
+
+    .elective-table h4 {
+      margin-bottom: 1rem;
+    }
+
+    .elective-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .elective-table th, .elective-table td {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .elective-table th {
+      background-color: #f0f0f0;
+    }
+
+    .submit-btn {
+      display: block;
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #003366;
+    }
+
+    .error {
+      color: #ff6b6b;
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .registrations-list {
+      margin-top: 2rem;
+    }
+
+    .registration-item {
+      background-color: #f0f0f0;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .registration-item button {
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <div class="dropdown">
+      <button class="dropdown-toggle">Academic Functions</button>
+      <div class="dropdown-content">
+        <a href="student.html">Course Registration</a>
+        <a href="#">University Exam/Result</a>
+        <a href="#">Course Feedback</a>
+        <a href="#">Online Assessment</a>
+        <a href="#">Online Assessment Result</a>
+        <a href="#">Mentor Feedback</a>
+        <a href="courseopenelective.html">Course Open Elective Preferences</a>
+        <a href="#">Student Withdrawal Request</a>
+        <a href="projects.html">Projects</a>
+      </div>
+    </div>
+    <button class="logout" onclick="logout()">Log Out</button>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="sidebar">
+      <img src="https://via.placeholder.com/100" alt="Profile" class="profile-pic">
+      <div class="nav">
+        <a href="dashboard.html">DASHBOARD</a>
+        <a href="#">PROFILE</a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="error" id="error-message"></div>
+      <div class="elective-table">
+        <h4>Course Open Elective Preferences</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Sr No</th>
+              <th>Course Code</th>
+              <th>Course Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" name="course" value="HS3227" data-name="Economics Beyond Growth"></td>
+              <td>1</td>
+              <td>HS3227</td>
+              <td>Economics Beyond Growth</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="course" value="EG3211" data-name="Supply Chain Management"></td>
+              <td>2</td>
+              <td>EG3211</td>
+              <td>Supply Chain Management</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="course" value="MT3202" data-name="Human Computer Interaction"></td>
+              <td>3</td>
+              <td>MT3202</td>
+              <td>Human Computer Interaction</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="course" value="HS3207" data-name="Incredible India: A Historical Journey through Food, Culture & Material Objects"></td>
+              <td>4</td>
+              <td>HS3207</td>
+              <td>Incredible India: A Historical Journey through Food, Culture & Material Objects</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="course" value="IR3201" data-name="Bhagwad Gita: A Manual for Human Life"></td>
+              <td>5</td>
+              <td>IR3201</td>
+              <td>Bhagwad Gita: A Manual for Human Life</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="course" value="CS3225" data-name="Computational Biology"></td>
+              <td>6</td>
+              <td>CS3225</td>
+              <td>Computational Biology</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="course" value="CS4164" data-name="Wireless Sensor Networks"></td>
+              <td>7</td>
+              <td>CS4164</td>
+              <td>Wireless Sensor Networks</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="course" value="CS4178" data-name="Introduction to Modern Cryptography"></td>
+              <td>8</td>
+              <td>CS4178</td>
+              <td>Introduction to Modern Cryptography</td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="submit-btn" onclick="submitCourses()">Submit Preferences</button>
+      </div>
+      <div class="registrations-list" id="registrations-list">
+        <h4>Your Elective Registrations</h4>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function submitCourses() {
+      const checkboxes = document.querySelectorAll('input[name="course"]:checked');
+      const selectedCourses = Array.from(checkboxes).map(checkbox => ({
+        code: checkbox.value,
+        name: checkbox.getAttribute('data-name')
+      }));
+      const errorMessage = document.getElementById("error-message");
+
+      errorMessage.style.display = "none";
+      errorMessage.textContent = "";
+
+      if (selectedCourses.length > 5) {
+        errorMessage.textContent = 'You can only select up to 5 courses.';
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      if (selectedCourses.length === 0) {
+        errorMessage.textContent = 'Please select at least one course.';
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      try {
+        const userEmail = localStorage.getItem("userEmail");
+        const userName = localStorage.getItem("userName") || "Student";
+        for (const course of selectedCourses) {
+          const response = await fetch("http://localhost:3000/all/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: userName,
+              email: userEmail,
+              courseOrProject: "course",
+              selectionName: course.name
+            })
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            errorMessage.textContent = data.message || "Registration failed";
+            errorMessage.style.display = "block";
+            return;
+          }
+        }
+
+        alert("Elective preferences submitted successfully!");
+        fetchRegistrations();
+        checkboxes.forEach(checkbox => checkbox.checked = false);
+        const courseCodes = selectedCourses.map(c => c.code).join(",");
+        const courseNames = encodeURIComponent(JSON.stringify(selectedCourses.map(c => c.name)));
+        window.location.href = `confirmation.html?courses=${courseCodes}&names=${courseNames}`;
+      } catch (error) {
+        errorMessage.textContent = "Failed to submit preferences";
+        errorMessage.style.display = "block";
+      }
+    }
+
+    async function fetchRegistrations() {
+      try {
+        const response = await fetch("http://localhost:3000/all/registrations");
+        const data = await response.json();
+
+        if (response.ok) {
+          displayRegistrations(data.data.filter(reg => reg.courseOrProject === "course"));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function displayRegistrations(registrations) {
+      const list = document.getElementById("registrations-list");
+      list.innerHTML = "<h4>Your Elective Registrations</h4>";
+
+      registrations.forEach(reg => {
+        const div = document.createElement("div");
+        div.className = "registration-item";
+        div.innerHTML = `
+          <p>Name: ${reg.name}</p>
+          <p>Email: ${reg.email}</p>
+          <p>Course: ${reg.selectionName}</p>
+          <button onclick="editRegistration('${reg._id}', '${reg.name}', '${reg.email}', '${reg.selectionName}')">Edit</button>
+          <button onclick="deleteRegistration('${reg._id}')">Delete</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function editRegistration(id, name, email, selectionName) {
+      const courseCheckboxes = document.querySelectorAll('input[name="course"]');
+      courseCheckboxes.forEach(checkbox => {
+        if (checkbox.getAttribute('data-name') === selectionName) {
+          checkbox.checked = true;
+        }
+      });
+
+      const submitButton = document.querySelector(".submit-btn");
+      submitButton.textContent = "Update Preference";
+      submitButton.onclick = async () => {
+        const checkboxes = document.querySelectorAll('input[name="course"]:checked');
+        const selectedCourse = checkboxes[0] ? {
+          name: checkboxes[0].getAttribute('data-name')
+        } : null;
+
+        if (!selectedCourse) {
+          document.getElementById("error-message").textContent = "Please select a course";
+          document.getElementById("error-message").style.display = "block";
+          return;
+        }
+
+        try {
+          const response = await fetch(`http://localhost:3000/all/registrations/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              email,
+              courseOrProject: "course",
+              selectionName: selectedCourse.name
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("Registration updated successfully!");
+            fetchRegistrations();
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            resetButton();
+          } else {
+            document.getElementById("error-message").textContent = data.message || "Update failed";
+            document.getElementById("error-message").style.display = "block";
+          }
+        } catch (error) {
+          document.getElementById("error-message").textContent = "Server error";
+          document.getElementById("error-message").style.display = "block";
+        }
+      };
+    }
+
+    async function deleteRegistration(id) {
+      if (confirm("Are you sure you want to delete this registration?")) {
+        try {
+          const response = await fetch(`http://localhost:3000/all/registrations/${id}`, {
+            method: "DELETE"
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("Registration deleted successfully!");
+            fetchRegistrations();
+          } else {
+            document.getElementById("error-message").textContent = data.message || "Deletion failed";
+            document.getElementById("error-message").style.display = "block";
+          }
+        } catch (error) {
+          document.getElementById("error-message").textContent = "Server error";
+          document.getElementById("error-message").style.display = "block";
+        }
+      }
+    }
+
+    function resetButton() {
+      const submitButton = document.querySelector(".submit-btn");
+      submitButton.textContent = "Submit Preferences";
+      submitButton.onclick = submitCourses;
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    window.onload = fetchRegistrations;
+  </script>
+</body>
+</html>
